@@ -33,11 +33,13 @@ Check what SC can actually do in Purview | [USAGE-GUIDE.md](USAGE-GUIDE.md) → 
 Understand product limitations | [USAGE-GUIDE.md](USAGE-GUIDE.md) → Known Limitations section
 Learn the technical architecture | [ARCHITECTURE.md](ARCHITECTURE.md)
 Deploy a DLP Triage Agent | [Agents Documentation](agents/README.md)
+Use Claude Code with this framework | [GETTING-STARTED-CLAUDE-CODE.md](GETTING-STARTED-CLAUDE-CODE.md)
 
 ## What's Inside This Repository
 
 ```
 ├── README.md (you are here)
+├── GETTING-STARTED-CLAUDE-CODE.md (how to use Claude Code with this framework)
 ├── USAGE-GUIDE.md (practical how-to guide for using this framework)
 ├── ARCHITECTURE.md (design principles, agent patterns, system architecture)
 ├── CONTRIBUTING.md (how to add prompts, playbooks, or learnings)
