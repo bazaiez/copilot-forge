@@ -1,0 +1,18 @@
+# Large PDF knowledge base files (keep local, don't push to repo)
+docs/technical-deep-dives/*.pdf
+docs/technical-deep-dives/*_files/
+
+# Saved HTML pages and their asset folders
+docs/technical-deep-dives/*.html
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Claude working files
+.claude/
