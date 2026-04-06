@@ -8,7 +8,7 @@ The catalog bridges the gap between general Security Copilot capabilities and sp
 
 ## What's Included
 
-**catalog.md** contains 20 use cases organized into 7 categories:
+**catalog.md** contains 22 use cases organized into 7 categories:
 
 - **DLP (Data Loss Prevention)**: Alert triage, policy investigation, false positive analysis, and policy optimization
 - **IRM (Insider Risk Management)**: Alert assessment, case investigation, user activity analysis, and risk scoring
@@ -94,5 +94,5 @@ This catalog is a living document. If you discover new use cases, find limitatio
 
 ---
 
-**Last Updated**: 2026-04-06
+**Last Updated**: April 2026
 **Maintained By**: Security Copilot Champions, Microsoft CSA Program

@@ -23,19 +23,18 @@ A single agent becomes bottlenecked trying to be expert at all of these. **Multi
 
 | File | Purpose |
 |------|---------|
-| `architecture.md` | Complete multi-agent design document with agent definitions, topology, and implementation guide |
+| `architecture.md` | Complete multi-agent design document with agent definitions, topologies, and implementation guide |
 | `examples/` | Concrete scenario walkthroughs showing agent interactions |
-| `prompts/` | System prompts and CLAUDE.md configurations for each agent |
-| `topologies/` | Predefined 3-agent, 5-agent, and 9-agent deployments |
+| `topologies/` | Predefined 3-agent, 5-agent, and 6-agent deployment patterns |
 
 ## Quick Start
 
-1. **Read `architecture.md`** for the complete design
+1. **Read `architecture.md`** for the complete design (includes agent definitions, topologies, and Claude implementation guide)
 2. **Choose a topology** based on your use case:
-   - **3-agent**: Simple DLP/IRM triage (Orchestrator + Investigator + Reporter)
-   - **5-agent**: Standard multi-domain investigation (add DLP, IRM, and Audit agents)
-   - **9-agent**: Full capability with optimization and review layers
-3. **Use the system prompts** in `prompts/` as templates for your Claude implementations
+   - **3-agent (Simple)**: Quick prompt generation (Orchestrator + Knowledge + Prompt Engineer + Quality Reviewer)
+   - **5-agent (Standard)**: Production prompt generation with playbook design
+   - **6-agent (Full)**: Enterprise deployments with customer workshop support
+3. **Review `examples/`** for concrete scenario walkthroughs
 4. **Deploy with Claude Code** for single-file agents or **Claude Agent SDK** for microservices
 
 ## Key Principles
@@ -88,7 +87,7 @@ These prompt books are living documents—improve them as you encounter new patt
 ---
 
 **Version**: 1.0
-**Last Updated**: 2026-04-06
+**Last Updated**: April 2026
 **Maintained By**: Security Copilot Champions (CSA Team)
 **Claude Models**: Claude 3.5 Sonnet and above
 **Status**: Production-Ready

@@ -63,9 +63,12 @@ Deploy a DLP Triage Agent | [Agents Documentation](agents/README.md)
 │
 ├── agents/
 │   ├── README.md (agent deployment and customization)
-│   └── architecture.md (multi-agent orchestration patterns)
+│   ├── architecture.md (multi-agent orchestration patterns)
+│   ├── examples/ (concrete scenario walkthroughs)
+│   └── topologies/ (predefined 3-agent, 5-agent, and 6-agent deployments)
 │
 ├── docs/
+│   ├── README.md (documentation index)
 │   ├── vision-and-scope.md (what we're building and why)
 │   ├── personas.md (detailed role definitions and workflows)
 │   ├── knowledge-architecture.md (how knowledge flows through SC)
@@ -79,7 +82,11 @@ Deploy a DLP Triage Agent | [Agents Documentation](agents/README.md)
 │   └── catalog.md (mapped scenarios with success criteria)
 │
 ├── templates/
-│   └── (incident response templates, triage worksheets, report formats)
+│   ├── README.md (template index and usage guide)
+│   ├── prompt-template.md (structure for new prompts)
+│   ├── playbook-template.md (structure for new playbooks)
+│   ├── use-case-template.md (structure for new use cases)
+│   └── agent-definition-template.md (structure for new agent definitions)
 │
 ├── backlog/
 │   └── (research areas and future development)

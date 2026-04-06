@@ -1992,7 +1992,7 @@ For time-critical investigations, execute this abbreviated sequence:
 ---
 
 **Version:** 1.0
-**Last Updated:** 2026-04-06
+**Last Updated:** April 2026
 **Status:** [ASPIRATIONAL]
 **Author:** Security Copilot Lab
 **Prompt Count:** 40 prompts across 10 phases

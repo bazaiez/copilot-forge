@@ -197,7 +197,7 @@ All prompts are written for realistic, achievable SC capabilities. No prompts re
 ## Version and Maintenance
 
 - **Created:** April 2026
-- **Last Updated:** April 6, 2026
+- **Last Updated:** April 2026
 - **Maintainer:** CSA / Security Copilot Champion
 - **Review Cycle:** Quarterly (Q2, Q3, Q4)
 

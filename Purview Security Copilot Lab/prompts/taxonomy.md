@@ -802,6 +802,6 @@ Watch this file for major updates. Subscribe to prompt library updates to stay c
 
 ---
 
-**Last Updated**: 2026-04-06
+**Last Updated**: April 2026
 **Maintained By**: Security Copilot Champion / CSA Team
 **Questions?** Contact your CSA or submit an issue to this repository.
