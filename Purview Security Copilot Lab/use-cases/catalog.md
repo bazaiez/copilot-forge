@@ -1,4 +1,4 @@
-# Use Case Catalog: Security Copilot for Purview Data Security
+# Use Case Catalog: Copilot Forge — Purview Data Security
 
 **Framework Version:** 1.1
 **Last Updated:** April 2026
@@ -768,4 +768,4 @@ All prompts leverage only the 6 validated Purview plugin capabilities and 4 SC a
 
 **Document Status:** Production Ready
 **Last Validated:** April 2026
-**Feedback?** Reach out to the Security Copilot Champions community.
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development

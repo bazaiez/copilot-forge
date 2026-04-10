@@ -1,14 +1,16 @@
-# Security Copilot Purview Prompt Books
+# 📝 Copilot Forge — Prompt Books
 
 Complete prompt library for Security Copilot + Purview Data Security integration. 
 
-**Organization:** Microsoft Internal | Built by: CSA + Security Copilot Champion | Purpose: Customer enablement and internal reference
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development
+
+> 💡 **Generate new prompts from scratch:** Use the [⚡ Prompt Generator Agent](../agents/prompt-generator-agent.md) to create prompts for any use case not covered here.
 
 ---
 
-## Prompt Books Overview
+## 📚 Prompt Books Overview
 
-### 1. Audit and Investigation (`audit/prompt-book.md`)
+### 🔎 1. Audit and Investigation (`audit/prompt-book.md`)
 **Focus:** Audit log analysis, timeline reconstruction, cross-signal correlation
 
 10 prompts covering:
@@ -29,7 +31,7 @@ Complete prompt library for Security Copilot + Purview Data Security integration
 
 ---
 
-### 2. Information Protection and Sensitivity Labels (`mip/prompt-book.md`)
+### 🏷️ 2. Information Protection and Sensitivity Labels (`mip/prompt-book.md`)
 **Focus:** Label coverage, misconfiguration detection, auto-labeling effectiveness
 
 10 prompts covering:
@@ -50,7 +52,7 @@ Complete prompt library for Security Copilot + Purview Data Security integration
 
 ---
 
-### 3. Executive Reporting (`executive/prompt-book.md`)
+### 📊 3. Executive Reporting (`executive/prompt-book.md`)
 **Focus:** Leadership summaries, board reports, incident briefs
 
 8 prompts covering:
@@ -69,7 +71,7 @@ Complete prompt library for Security Copilot + Purview Data Security integration
 
 ---
 
-### 4. Customer Workshop and Demo (`workshop/prompt-book.md`)
+### 🎓 4. Customer Workshop and Demo (`workshop/prompt-book.md`)
 **Focus:** CSA-ready demos, workshop scenarios, talking point generators
 
 10 prompts covering:
@@ -91,7 +93,7 @@ Complete prompt library for Security Copilot + Purview Data Security integration
 
 ---
 
-### 5. Operations and Configuration (`operations/prompt-book.md`)
+### ⚙️ 5. Operations and Configuration (`operations/prompt-book.md`)
 **Focus:** Policy setup, configuration guidance, deployment readiness
 
 10 prompts covering:
@@ -112,7 +114,25 @@ Complete prompt library for Security Copilot + Purview Data Security integration
 
 ---
 
-## How to Use These Prompt Books
+### 🔬 6. DFIR Deep Investigation (`dfir/prompt-book.md`)
+**Focus:** Full-spectrum forensic analysis triggered by DLP alerts
+
+40 prompts across 10 investigation phases covering:
+- DLP alert triage and initial scoping
+- Data exfiltration path analysis
+- Insider risk signal correlation
+- Device posture and endpoint forensics
+- Identity and sign-in risk analysis
+- Evidence chain construction
+- Timeline reconstruction
+
+**Best for:** DFIR analysts, incident response teams, forensic investigations
+
+**Validation Status:** [ASPIRATIONAL] — structured for SC + Purview with investigative depth requiring analyst judgment
+
+---
+
+## 🗺️ How to Use These Prompt Books
 
 ### For Internal CSAs and Champions
 1. **Sales enablement:** Use workshop prompts for customer demos and talking points

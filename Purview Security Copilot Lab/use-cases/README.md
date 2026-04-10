@@ -1,4 +1,4 @@
-# Security Copilot for Purview Data Security: Use Case Catalog
+# Copilot Forge — Purview Data Security: Use Case Catalog
 
 ## Overview
 
@@ -95,4 +95,4 @@ This catalog is a living document. If you discover new use cases, find limitatio
 ---
 
 **Last Updated**: April 2026
-**Maintained By**: Security Copilot Champions, Microsoft CSA Program
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development

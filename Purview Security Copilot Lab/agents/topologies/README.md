@@ -1,39 +1,53 @@
 # Agent Topologies
 
-This directory contains predefined multi-agent deployment patterns for different use cases and team sizes.
+Predefined deployment patterns for different use cases and team sizes.
 
 ## Available Topologies
 
-### Simple (3 Agents)
-**Best for:** Quick prompt generation, internal CSA development, proof-of-concept
+### Starter (3 Agents)
+**Best for:** Quick prompt generation, single CSA, proof-of-concept
 
-**Agents:** Orchestrator + Purview Knowledge + SC Prompt Engineer + Quality Reviewer
+**Agents:** Orchestrator + Knowledge Agent + Prompt Generator Agent
 
 **Use when:**
-- Single CSA working on prompt generation
+- Single CSA generating prompts for a customer engagement
+- Quick capability checks and prompt creation
 - Internal tooling and rapid iteration
-- Validating the multi-agent approach
 
 ### Standard (5 Agents)
-**Best for:** Production prompt generation, customer workshops, playbook design
+**Best for:** Production customer engagements, investigation workflows
 
-**Agents:** Orchestrator + Purview Knowledge + SC Prompt Engineer + Investigation Playbook + Quality Reviewer
+**Agents:** Orchestrator + Knowledge + Prompt Generator + Investigation + Quality Reviewer
 
 **Use when:**
-- Multi-CSA teams building customer deliverables
-- Production deployments requiring structured playbooks
-- Large customer engagements with multiple investigation types
+- Active incident investigation with SC prompts
+- Customer deliverables that need quality validation
+- Multi-step workflows spanning triage, investigation, and reporting
 
 ### Full (6 Agents)
-**Best for:** Enterprise deployments, high-volume customer enablement, content library building
+**Best for:** Enterprise deployments, customer workshops, complete content packages
 
-**Agents:** All Standard agents + Customer Workshop Agent
+**Agents:** All 6 — Orchestrator + Knowledge + Prompt Generator + Investigation + Demo Architect + Quality Reviewer
 
 **Use when:**
-- Large CSA organizations running frequent customer workshops
-- Building and maintaining a content marketplace
+- Preparing customer workshops and demos
+- Large CSA teams building content libraries
+- Complex scenarios requiring investigation + demo + reporting
 - Customer advisory boards and enablement programs
 
 ---
 
-**Full details:** See [architecture.md](../architecture.md) Section 3 for complete topology diagrams and agent responsibilities.
+## Agent Files
+
+| Agent | File |
+|---|---|
+| Orchestrator | [orchestrator-agent.md](../orchestrator-agent.md) |
+| Knowledge | [knowledge-agent.md](../knowledge-agent.md) |
+| Prompt Generator | [prompt-generator-agent.md](../prompt-generator-agent.md) |
+| Investigation | [investigation-agent.md](../investigation-agent.md) |
+| Demo Architect | [demo-architect-agent.md](../demo-architect-agent.md) |
+| Quality Reviewer | [quality-reviewer-agent.md](../quality-reviewer-agent.md) |
+
+---
+
+**Full architecture details:** See [architecture.md](../architecture.md) for the complete design document.

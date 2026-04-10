@@ -1,16 +1,32 @@
 # Audit and Investigation Prompt Book
 
-Security Copilot for Purview Data Security: Audit log analysis, timeline reconstruction, and cross-signal correlation.
+**Validation Status:** 4 [VALIDATED] / 3 [PARTIALLY-VALIDATED] / 3 [ASPIRATIONAL]
+**Required Plugin:** Microsoft Purview (primary); Microsoft Entra (for sign-in anomalies); see per-section notes
+**Last Validated:** April 2026
+
+Copilot Forge — Purview Data Security: Audit log analysis, timeline reconstruction, and cross-signal correlation.
 
 **Note:** SC accesses audit data through the Purview plugin, not raw audit log queries. These prompts ask SC to analyze activities, identify patterns, and correlate signals—not to write KQL.
 
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names for activity-based prompts
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names for detection queries
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins per section
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+- [Error Recovery](../taxonomy.md#error-recovery-and-troubleshooting) — What to do when SC returns unexpected results
+
+**Important:** Audit log data has a 24-48 hour lag in the Unified Audit Log. For near-real-time data, supplement with DLP and IRM alerts which have 15-30 minute and near-real-time latency respectively.
+
 ---
 
-## 1. Summarize Suspicious Activity Around a Data Breach Incident
+## 1. Summarize Suspicious Activity Around a Data Breach Incident [PARTIALLY-VALIDATED]
 
 **Title:** Incident Timeline Reconstruction
 
 **Purpose:** Reconstruct events leading up to a suspected data breach, correlating activity across multiple users, locations, and services.
+
+**Relevant Audit Log Operations:** `FileAccessed`, `FileDownloaded`, `FileSyncDownloadedFull`, `SharingSet`, `AnonymousLinkCreated`, `Send`, `SendAs`, `FileUploadedToCloud`
+**Required Plugin:** Purview (primary); Entra (for sign-in context)
 
 **When to Use:**
 - Security incident declared with potential data exfiltration
@@ -51,11 +67,14 @@ Focus on the Sales team and any service accounts. Flag any risky behaviors.
 
 ---
 
-## 2. Identify Data Exfiltration Patterns
+## 2. Identify Data Exfiltration Patterns [PARTIALLY-VALIDATED]
 
 **Title:** Data Movement Risk Analysis
 
 **Purpose:** Detect unusual data transfer patterns that suggest intentional or negligent exfiltration.
+
+**Relevant Audit Log Operations:** `FileDownloaded`, `FileSyncDownloadedFull`, `FileCreatedOnRemovableMedia`, `FileCopiedToRemovableMedia`, `FileUploadedToCloud`, `SharingSet`, `AnonymousLinkCreated`, `Send`, `New-InboxRule`
+**Required Plugin:** Purview (primary); Entra (for location data); Defender for Endpoint (for endpoint activity)
 
 **When to Use:**
 - Ongoing monitoring for anomalous data movement
@@ -100,11 +119,15 @@ Flag the top 5 users by exfiltration risk score.
 
 ---
 
-## 3. Cross-Correlate Multiple Security Signals Around a User
+## 3. Cross-Correlate Multiple Security Signals Around a User [VALIDATED]
 
 **Title:** User Risk Signal Correlation
 
 **Purpose:** Consolidate audit, IRM, and DLP signals to develop complete risk picture for a specific user.
+
+**Relevant Audit Log Operations:** `FileAccessed`, `FileDownloaded`, `SharingSet`, `DlpRuleMatch`, `InsiderRiskAlertGenerated`, `InsiderRiskSequenceDetected`, `New-InboxRule`
+**Required Plugin:** Purview
+**Prerequisite:** IRM data sharing enabled for cross-signal correlation
 
 **When to Use:**
 - User flagged by IRM as having elevated insider risk
@@ -158,11 +181,14 @@ Synthesize into a single risk assessment with confidence level.
 
 ---
 
-## 4. Analyze Policy Violation Clusters to Find Root Causes
+## 4. Analyze Policy Violation Clusters to Find Root Causes [VALIDATED]
 
 **Title:** Policy Violation Root Cause Analysis
 
 **Purpose:** Move beyond individual DLP/compliance alerts to understand systemic issues: misconfigured policies, inadequate training, or workflow friction.
+
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPRuleUndo`, `DLPInfo`
+**Required Plugin:** Purview
 
 **When to Use:**
 - Spike in DLP violations for specific rule or file type
@@ -212,11 +238,13 @@ Analyze DLP and compliance violations from the past 45 days:
 
 ---
 
-## 5. Validate Compliance for Regulated Data
+## 5. Validate Compliance for Regulated Data [ASPIRATIONAL]
 
 **Title:** Compliance Audit Trail Validation
 
 **Purpose:** Demonstrate compliance with regulations (GDPR, CCPA, HIPAA) by validating audit logs show proper access controls and data minimization.
+
+**Note:** Full compliance validation exceeds the scope of a single SC prompt. This prompt provides a starting framework; actual compliance requires broader organizational controls, documentation, and manual verification.
 
 **When to Use:**
 - Annual compliance audit or certification renewal
@@ -274,11 +302,15 @@ Generate a compliance report suitable for audit stakeholders.
 
 ---
 
-## 6. Investigate Unusual Sign-In Patterns
+## 6. Investigate Unusual Sign-In Patterns [ASPIRATIONAL]
 
 **Title:** Anomalous Access Detection
 
 **Purpose:** Identify compromised credentials or unauthorized access attempts by correlating sign-in anomalies with data access.
+
+**Relevant Audit Log Operations:** `UserLoggedIn`, `UserLoginFailed` (Entra plugin), `FileAccessed`, `FileDownloaded`, `MailItemsAccessed` (Purview plugin)
+**Required Plugin:** Microsoft Entra (primary for sign-in data); Purview (for data access correlation)
+**Important:** This prompt primarily requires the Microsoft Entra plugin, not Purview alone. Verify the Entra plugin is enabled before running.
 
 **When to Use:**
 - Alert from Azure AD about impossible travel or failed login spikes

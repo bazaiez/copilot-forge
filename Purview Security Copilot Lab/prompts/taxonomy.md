@@ -1,4 +1,4 @@
-# Prompt Taxonomy: Security Copilot for Purview Data Security
+# Prompt Taxonomy: Copilot Forge — Purview Data Security
 
 A framework for classifying, designing, and evaluating prompts used with Microsoft Security Copilot to investigate and respond to incidents within Microsoft Purview Data Security.
 
@@ -790,6 +790,139 @@ Each category has a specific job. Combining them in workflows creates powerful i
 
 ---
 
+## Pattern 9: The Operation Anchor
+
+**Template**:
+```
+Analyze [Purview data source] for [entity] looking specifically for
+these audit log operations: [EXACT_OPERATION_NAMES].
+For each occurrence, provide [output format].
+```
+
+**When to Use**:
+- SC is returning incomplete or incorrect results for activity-based queries
+- You need to ensure SC queries the correct Unified Audit Log operation types
+- Investigation requires precision on specific activity types (e.g., USB exfiltration, email forwarding)
+- You want to avoid SC interpreting vague descriptions ("downloads") incorrectly
+
+**Example with Purview**:
+```
+Analyze audit logs for user john@contoso.com in the past 30 days.
+Look specifically for these operations: FileDownloaded,
+FileSyncDownloadedFull, FileCreatedOnRemovableMedia,
+FileCopiedToRemovableMedia, FileUploadedToCloud,
+SharingSet, AnonymousLinkCreated, Send.
+
+For each occurrence provide: timestamp, file name, destination,
+and whether a DLP policy matched (DlpRuleMatch).
+```
+
+**Why This Pattern Exists**: Security Copilot sometimes fails to map natural language descriptions to the correct underlying Unified Audit Log operation names. When you say "downloads to USB," SC may not translate that to `FileCreatedOnRemovableMedia` or `FileCopiedToRemovableMedia`. By providing the exact operation names, you force SC to query the correct event types.
+
+**Tips**:
+- Reference the [Audit Log Operations Reference](../docs/reference/audit-log-operations.md) for exact names
+- Combine operation names that serve the same investigation goal (e.g., all USB operations together)
+- Include both the natural language description AND the operation name for clarity
+- If SC returns no results, verify the operation name is correct for your workload
+
+---
+
+### Pattern 10: The SIT Anchor
+
+**Template**:
+```
+Show [alert type] where the sensitive information type
+"[EXACT_SIT_NAME]" was detected with [confidence level]
+in [time range].
+```
+
+**When to Use**:
+- You need alerts for a specific data type and SC is returning mixed results
+- Policy tuning requires understanding which SIT triggered the match
+- Compliance investigations require precise data type identification
+
+**Example with Purview**:
+```
+Show DLP alerts where the sensitive information type
+"Credit Card Number" or "U.S. Social Security Number (SSN)"
+was detected with high confidence (>85%) in the past 7 days.
+For each alert, show the match count, policy rule, and user.
+```
+
+**Why This Pattern Exists**: Saying "credit card data" may cause SC to match broader patterns. Using the exact SIT name `Credit Card Number` ensures SC queries the specific detection engine.
+
+**Tips**:
+- Reference the [Sensitive Information Types Reference](../docs/reference/sensitive-information-types.md) for exact names
+- Include confidence thresholds to filter out low-quality matches
+- For custom SITs, use the exact display name from your Purview compliance portal
+
+---
+
+## Error Recovery and Troubleshooting
+
+When SC returns unexpected, incomplete, or incorrect results, use these recovery strategies before abandoning a prompt.
+
+### Common SC Failures and Recovery Actions
+
+| SC Behavior | Likely Cause | Recovery Action |
+|------------|-------------|----------------|
+| "I don't have enough information to answer" | Missing plugin, insufficient context, or alert not found | Verify Purview plugin is enabled. Check alert ID format. Try: `Summarize the DLP alert with ID <exactAlertId>` |
+| Returns generic advice instead of specific data | Prompt too vague; SC defaulted to knowledge-based response | Add specific identifiers: user UPN, alert ID, exact policy name, time range |
+| Returns data for wrong user or alert | Ambiguous prompt or context drift in long session | Start a new SC session. Use full UPN (user@domain.com) and exact alert ID |
+| "I cannot access that data" | User lacks RBAC permissions, or plugin not enabled | Check user's Purview RBAC roles. Verify Purview plugin toggle in SC admin |
+| Returns partial timeline (missing recent events) | Audit log lag (24-48 hours for UAL) | Note that recent events may not appear. Supplement with near-real-time DLP/IRM alerts |
+| Misidentifies operation type | SC mapped natural language to wrong audit operation | Use the Operation Anchor pattern: include exact operation names in the prompt |
+| Returns "no alerts found" when alerts exist | Alert ID format mismatch, or alert older than 30 days | Verify alert ID format. For older alerts, try broader queries with user UPN and date range |
+| Inconsistent results across sessions | SC responses vary by session context and model state | Version all prompts. Include identical context setup at session start. Accept variability |
+| Omits key fields from expected output | SC truncated response, or data not available | Break prompt into smaller pieces. Ask for one field at a time. Request specific fields explicitly |
+| Conflates two users or incidents | Long session with multiple entities discussed | Start new session for each distinct investigation. Reference entities by full identifiers |
+
+### Recovery Prompt Templates
+
+**When SC cannot find an alert:**
+```
+I'm looking for a DLP alert. The alert ID is <alertId>.
+If you cannot find this specific alert, show me all DLP alerts
+for user <user> between <startDate> and <endDate> and I will
+identify the correct one.
+```
+
+**When SC returns generic advice instead of data:**
+```
+I need specific data from our Purview environment, not general guidance.
+Using the Purview plugin, show me the actual DLP alerts for
+user <user>@contoso.com in the past 7 days.
+List each alert with: alert ID, timestamp, policy name, and severity.
+```
+
+**When SC misidentifies activity types:**
+```
+The previous response may have included incorrect activity types.
+Please re-analyze user <user>'s activities using specifically these
+Unified Audit Log operations: [list exact operation names].
+Do not interpret or expand the operation list.
+```
+
+**When SC output seems incomplete:**
+```
+Your previous response may be missing data. Please provide:
+1. [Specific field 1]
+2. [Specific field 2]
+3. [Specific field 3]
+If any of these are unavailable, state which ones and why.
+```
+
+### When to Start a New Session
+
+Start a fresh SC session when:
+- Investigation has been in the same session for more than 10 prompts
+- SC responses are becoming less relevant or repeating itself
+- You are switching from one user/incident to a different one
+- SC is referencing context from a previous investigation in the same session
+- You need to verify a finding independently (avoid confirmation bias)
+
+---
+
 ## Future Enhancements
 
 This taxonomy will evolve as:
@@ -797,11 +930,11 @@ This taxonomy will evolve as:
 - New Purview features are released (e.g., data sharing governance, privacy risk assessment)
 - Security Copilot capabilities expand (e.g., threat hunting with external threat intelligence, automated response)
 - Customer needs emerge (e.g., new compliance requirements, operational challenges)
+- New operation types or SITs are added to Purview (update reference documents accordingly)
 
 Watch this file for major updates. Subscribe to prompt library updates to stay current with new prompts and category additions.
 
 ---
 
 **Last Updated**: April 2026
-**Maintained By**: Security Copilot Champion / CSA Team
-**Questions?** Contact your CSA or submit an issue to this repository.
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development

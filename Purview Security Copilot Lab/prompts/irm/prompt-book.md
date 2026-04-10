@@ -1,5 +1,9 @@
 # IRM Prompt Book: Security Copilot for Insider Risk Management
 
+**Validation Status:** 10 [VALIDATED] / 3 [PARTIALLY-VALIDATED]
+**Required Plugin:** Microsoft Purview (primary); Microsoft Entra (optional, for sign-in and identity context)
+**Last Validated:** April 2026
+
 This prompt book contains 16 ready-to-use Security Copilot prompts for Insider Risk Management workflows. Each prompt is validated against real Security Copilot capabilities with the Purview plugin enabled. Prompts are organized by investigation stage, from alert triage through risk assessment and escalation.
 
 **Key Capabilities Used:**
@@ -7,13 +11,22 @@ This prompt book contains 16 ready-to-use Security Copilot prompts for Insider R
 - Get Data Risk Summary
 - Triage Purview Alerts
 
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names for activity-based prompts
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names for detection queries
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins per section
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+- [Error Recovery](../taxonomy.md#error-recovery-and-troubleshooting) — What to do when SC returns unexpected results
+
+**Important:** SC does not maintain per-user behavioral baselines. When prompts reference "baseline" or "anomalous behavior," SC reports what Purview IRM has flagged as anomalous based on IRM's own analytics — it does not compute its own baselines.
+
 ---
 
 ## 1. TRIAGE
 
 Initial alert assessment and priority ranking for incoming insider risk indicators.
 
-### 1.1 Single IRM Alert Risk Assessment
+### 1.1 Single IRM Alert Risk Assessment [VALIDATED]
 
 **Title:** Assess IRM Alert Risk Level and Triage Priority
 
@@ -22,6 +35,7 @@ Initial alert assessment and priority ranking for incoming insider risk indicato
 **When to Use:** Immediately after an IRM alert is generated; helps incident responders prioritize caseload.
 
 **SC System Capability Used:** Triage Purview Alerts
+**Relevant Audit Log Operations:** `InsiderRiskAlertGenerated`, `InsiderRiskSequenceDetected`, `SecurityComplianceInsiderRiskPolicy`
 
 **Exact Prompt:**
 ```
@@ -51,7 +65,7 @@ Show me the Insider Risk Management alerts for <user>. What is their risk profil
 
 ---
 
-### 1.2 Multi-User Risk Priority Ranking
+### 1.2 Multi-User Risk Priority Ranking [VALIDATED]
 
 **Title:** Rank Multiple Users by Insider Risk Priority
 
@@ -60,6 +74,7 @@ Show me the Insider Risk Management alerts for <user>. What is their risk profil
 **When to Use:** During period of multiple concurrent IRM alerts; helps allocate investigation resources efficiently.
 
 **SC System Capability Used:** Triage Purview Alerts + Get User Risk Summary
+**Relevant Audit Log Operations:** `InsiderRiskAlertGenerated`, `InsiderRiskCaseCreated`
 
 **Exact Prompt:**
 ```
@@ -89,7 +104,7 @@ I have multiple Insider Risk Management alerts. Rank the top 5 users by risk pri
 
 ---
 
-### 1.3 Quick Context: Is This User Suspicious?
+### 1.3 Quick Context: Is This User Suspicious? [VALIDATED]
 
 **Title:** Assess Whether IRM Alert Indicates Genuine Insider Risk or False Positive
 
@@ -131,7 +146,7 @@ Can you summarize risk associated with user <user>? Considering their role (Sale
 
 Deep-dive analysis of suspicious user activity and risk indicators.
 
-### 2.1 User Activity Timeline and Behavioral Anomalies
+### 2.1 User Activity Timeline and Behavioral Anomalies [VALIDATED]
 
 **Title:** Reconstruct User Activity Timeline with Anomaly Highlighting
 
@@ -140,6 +155,8 @@ Deep-dive analysis of suspicious user activity and risk indicators.
 **When to Use:** After identifying high-risk user; needed to understand activity progression and intent.
 
 **SC System Capability Used:** Get User Risk Summary
+**Relevant Audit Log Operations:** `FileAccessed`, `FileDownloaded`, `FileSyncDownloadedFull`, `FileModified`, `SharingSet`, `Send`, `New-InboxRule`, `FileCreatedOnRemovableMedia`
+**Important:** SC reports anomalies flagged by IRM, not its own computed baselines. "Highlight anomalies" means: show activities that IRM flagged as deviating from the user's established behavioral pattern.
 
 **Exact Prompt:**
 ```
@@ -171,7 +188,7 @@ List all the sequential activities involving user <user> over the past 30 days. 
 
 ---
 
-### 2.2 Data Exfiltration Activities Analysis
+### 2.2 Data Exfiltration Activities Analysis [VALIDATED]
 
 **Title:** Identify and Analyze All User Data Exfiltration Attempts
 
@@ -180,6 +197,8 @@ List all the sequential activities involving user <user> over the past 30 days. 
 **When to Use:** When IRM alert indicates exfiltration activity; needed to assess data risk.
 
 **SC System Capability Used:** Get User Risk Summary + Get Data Risk Summary
+**Relevant Audit Log Operations:** `FileDownloaded`, `FileSyncDownloadedFull`, `FileCreatedOnRemovableMedia`, `FileCopiedToRemovableMedia`, `FileUploadedToCloud`, `SharingSet`, `AnonymousLinkCreated`, `Send`, `SendAs`
+**Note:** For comprehensive exfiltration detection, include exact operation names from [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md). Use the Operation Anchor pattern if SC returns incomplete results.
 
 **Exact Prompt:**
 ```
@@ -211,7 +230,7 @@ List all the data exfiltration activities involving user <user> in the past 30 d
 
 ---
 
-### 2.3 Obfuscation and Hiding Techniques
+### 2.3 Obfuscation and Hiding Techniques [PARTIALLY-VALIDATED]
 
 **Title:** Detect Evidence of User Attempting to Hide Activity
 
@@ -220,6 +239,8 @@ List all the data exfiltration activities involving user <user> in the past 30 d
 **When to Use:** In high-severity IRM investigation where deception appears part of activity pattern.
 
 **SC System Capability Used:** Get User Risk Summary
+**Relevant Audit Log Operations:** `FileDeleted`, `FileDeletedFirstStageRecycleBin`, `FileDeletedSecondStageRecycleBin`, `SoftDelete`, `HardDelete`, `MoveToDeletedItems`, `New-InboxRule`, `Set-InboxRule`, `Disable-MailboxAuditLog`
+**Note:** Obfuscation detection is limited to what IRM surfaces. SC cannot observe already-deleted content.
 
 **Exact Prompt:**
 ```
@@ -250,7 +271,7 @@ Did the user <user> engage in any unusual behavior during this investigation per
 
 ---
 
-### 2.4 Activity Escalation and Pattern Recognition
+### 2.4 Activity Escalation and Pattern Recognition [VALIDATED]
 
 **Title:** Assess Whether Activities Indicate Escalating Threat or Isolated Incident
 
@@ -289,7 +310,7 @@ Show key actions performed by user <user> in the last 10 days. Do these activiti
 
 ---
 
-### 2.5 Unusual Behavior Baseline Comparison
+### 2.5 Unusual Behavior Baseline Comparison [PARTIALLY-VALIDATED]
 
 **Title:** Compare User Activity to Historical Baseline and Peer Group
 
@@ -298,6 +319,7 @@ Show key actions performed by user <user> in the last 10 days. Do these activiti
 **When to Use:** To validate whether IRM alert indicators represent genuine deviation or normal role activity.
 
 **SC System Capability Used:** Get User Risk Summary
+**Important:** SC does not compute its own behavioral baselines. This prompt relies on IRM's anomaly detection. Results reflect what IRM has flagged, not independent SC analysis.
 
 **Exact Prompt:**
 ```

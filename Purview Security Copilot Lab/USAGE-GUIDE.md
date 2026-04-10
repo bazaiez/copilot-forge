@@ -1,4 +1,6 @@
-# How to Use This Framework
+# 📘 How to Use Copilot Forge
+
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development
 
 A practical guide to get productive with Security Copilot for Purview data security investigations in 15 minutes or less.
 

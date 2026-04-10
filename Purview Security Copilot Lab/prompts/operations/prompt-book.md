@@ -1,8 +1,18 @@
 # Operations and Configuration Prompt Book
 
-Security Copilot for Purview Data Security: Operational tasks, policy setup guidance, configuration review, and deployment readiness.
+**Validation Status:** All [VALIDATED] — Configuration guidance is a reliable SC capability
+**Required Plugin:** Microsoft Purview
+**Last Validated:** April 2026
+
+Copilot Forge — Purview Data Security: Operational tasks, policy setup guidance, configuration review, and deployment readiness.
 
 **Note:** These prompts answer "how do I..." questions and guide operational decisions. SC leverages Purview documentation and best practices to support implementation work. Not all configurations are performed by SC (that's in the portal), but SC can guide, validate, and recommend.
+
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names for monitoring prompts
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names for policy configuration
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
 
 ---
 

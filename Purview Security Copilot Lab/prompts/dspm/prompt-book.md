@@ -1,5 +1,9 @@
 # DSPM Prompt Book: Security Copilot for Data Security Posture Management
 
+**Validation Status:** 5 [VALIDATED] / 1 [PARTIALLY-VALIDATED] / 2 [ASPIRATIONAL]
+**Required Plugin:** Microsoft Purview
+**Last Validated:** April 2026
+
 This prompt book provides Security Copilot users with practical prompts for assessing, analyzing, and remediating data security posture across Microsoft Purview. Prompts use the DSPM Posture Agent capabilities including natural language data discovery, risk assessments, and policy recommendations.
 
 **Key Capabilities Used:**
@@ -8,13 +12,20 @@ This prompt book provides Security Copilot users with practical prompts for asse
 - Natural language data discovery and risk assessment
 - One-click policy recommendations
 
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins per section
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+- [Error Recovery](../taxonomy.md#error-recovery-and-troubleshooting) — Recovery when SC returns unexpected results
+
 ---
 
 ## 1. POSTURE ASSESSMENT
 
 Understanding organizational data risk and security gaps.
 
-### 1.1 Executive Data Risk Dashboard
+### 1.1 Executive Data Risk Dashboard [VALIDATED]
 
 **Title:** Executive-Focused Data Risk Overview
 
@@ -59,7 +70,7 @@ Format as a brief executive dashboard view.
 
 ---
 
-### 1.2 Sensitive Data Exposure and Classification Analysis
+### 1.2 Sensitive Data Exposure and Classification Analysis [VALIDATED]
 
 **Title:** Assess Coverage and Exposure of Sensitive Data Types
 
@@ -104,7 +115,7 @@ Provide a detailed analysis of sensitive data exposure in our environment:
 
 ---
 
-### 1.3 Oversharing Risk Assessment
+### 1.3 Oversharing Risk Assessment [VALIDATED]
 
 **Title:** Identify Files and Folders with Excessive External or Broad Internal Sharing
 
@@ -149,7 +160,7 @@ Identify oversharing risks in our organization:
 
 ---
 
-### 1.4 Label Coverage and Retention Policy Effectiveness
+### 1.4 Label Coverage and Retention Policy Effectiveness [VALIDATED]
 
 **Title:** Assess Application and Effectiveness of Data Labels and Retention Policies
 
@@ -199,7 +210,7 @@ Evaluate our data labeling and retention policy effectiveness:
 
 Managing data access risks from AI systems and Copilot interactions.
 
-### 2.1 AI-Accessible Sensitive Data Assessment
+### 2.1 AI-Accessible Sensitive Data Assessment [ASPIRATIONAL]
 
 **Title:** Identify Sensitive Data that AI Systems and Copilots Can Access
 
@@ -246,7 +257,7 @@ Analyze data accessibility from AI and Copilot systems:
 
 ---
 
-### 2.2 Copilot Interaction Risk and Prompt Injection Prevention
+### 2.2 Copilot Interaction Risk and Prompt Injection Prevention [ASPIRATIONAL]
 
 **Title:** Assess Risks of Sensitive Data Exposure Through Copilot Prompts
 
@@ -297,7 +308,7 @@ Evaluate Copilot interaction risks:
 
 Addressing identified risks and implementing controls.
 
-### 3.1 Prioritized Remediation Action Plan
+### 3.1 Prioritized Remediation Action Plan [PARTIALLY-VALIDATED]
 
 **Title:** Create Prioritized List of Data Security Remediation Actions
 

@@ -1,8 +1,16 @@
 # Customer Workshop and Demo Prompt Book
 
-Security Copilot for Purview Data Security: CSA-ready demo prompts, workshop scenarios, and talking point generators.
+**Validation Status:** All [VALIDATED] — Workshop prompts verified for live customer demos
+**Required Plugin:** Microsoft Purview
+**Last Validated:** April 2026
+
+Copilot Forge — Purview Data Security: CSA-ready demo prompts, workshop scenarios, and talking point generators.
 
 **Note:** These prompts are optimized for live customer presentations and workshops. They're designed to work reliably, generate compelling output, and create "wow" moments that show Purview + SC value. Avoid complex cross-signal correlations in demos; stick to validated, single-plugin capabilities.
+
+**Reference Documents:**
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
 
 ---
 

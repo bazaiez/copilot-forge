@@ -276,7 +276,7 @@ For questions or improvements:
 **Document Version**: 2.0
 **Last Updated**: April 2026
 **Status**: Complete - All prompts validated and ready for use
-**Maintained By**: Security Copilot Champion / CSA Team
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development
 
 ---
 

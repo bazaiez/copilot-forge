@@ -1,5 +1,14 @@
 # Multi-Agent Architecture for Purview Security Copilot Prompt Generation
 
+> **Note:** This is the original architecture design document. The 6 agents described here have been **fully implemented** with production-ready system prompts. For the current agent files, see:
+> - [AGENT-HUB.md](AGENT-HUB.md) — Start here
+> - [orchestrator-agent.md](orchestrator-agent.md) — Orchestrator
+> - [knowledge-agent.md](knowledge-agent.md) — Knowledge Agent (was "Purview Knowledge Agent")
+> - [prompt-generator-agent.md](prompt-generator-agent.md) — Prompt Generator (was "SC Prompt Engineer")
+> - [investigation-agent.md](investigation-agent.md) — Investigation Agent (was "Investigation Playbook Agent")
+> - [demo-architect-agent.md](demo-architect-agent.md) — Demo Architect (was "Customer Workshop Agent")
+> - [quality-reviewer-agent.md](quality-reviewer-agent.md) — Quality Reviewer
+
 ## Section 1: Architecture Overview
 
 ### Purpose
@@ -873,6 +882,205 @@ Example:
 [SOURCE: MS Learn - "Security Copilot with Purview" documentation]
 [NEXT STEPS: SC Prompt Engineer can now generate cross-signal prompts that
             reference both DLP alerts and IRM user risk]
+```
+
+---
+
+## Section 7: Adaptive Reasoning Protocol for Undocumented Cases
+
+### Problem Statement
+
+Not every investigation scenario is documented in the prompt books. Analysts encounter novel cases including Communication Compliance violations, eDiscovery searches, new SIT types, cross-tenant data flows, or activity types they do not recognize. Without guidance, agents either refuse the request or produce unreliable output.
+
+### Design Goal
+
+Enable agents to handle novel, undocumented investigation scenarios by systematically decomposing them into known capability patterns, generating best-effort prompts clearly marked for testing, and documenting new patterns for future reuse.
+
+### Adaptive Reasoning Workflow
+
+```
+Analyst Request (novel/undocumented scenario)
+    │
+    ▼
+Orchestrator: Does this match any existing prompt book?
+    ├─ Yes → Route to standard workflow
+    └─ No ↓
+    ▼
+Orchestrator: Activate Adaptive Reasoning Protocol
+    │
+    ├─ 1. Route to Purview Knowledge Agent:
+    │     "What Purview data sources are relevant to this scenario?"
+    │     "Which of the 6 system capabilities could surface useful data?"
+    │     "What audit log operation names correspond to this activity?"
+    │
+    ├─ 2. Route to SC Prompt Engineer with enhanced instructions:
+    │     "Generate a best-effort prompt chain using known capability
+    │      patterns. Mark all output as [EXPERIMENTAL]."
+    │     "Use Operation Anchor pattern with exact audit log operation names."
+    │     "Reference the audit-log-operations.md for operation names."
+    │
+    ├─ 3. Route to Quality Reviewer with adaptive rules:
+    │     "Instead of rejecting unknown capabilities, classify prompts as:
+    │      [EXPERIMENTAL - HIGH CONFIDENCE]: Uses validated capabilities in new combination
+    │      [EXPERIMENTAL - MEDIUM CONFIDENCE]: Uses validated capabilities for untested scenario
+    │      [EXPERIMENTAL - LOW CONFIDENCE]: Relies on assumed/unverified capability
+    │      Provide specific rationale for confidence level."
+    │
+    └─ 4. Package output with testing instructions:
+          "These prompts are untested. Before production use:
+           1. Execute each prompt in a test environment
+           2. Verify output matches expected fields
+           3. Document any SC behavior differences
+           4. Update validation-matrix.md with results
+           5. If validated, move prompt to appropriate prompt book"
+```
+
+### Orchestrator Fallback Route
+
+Add to Orchestrator Agent system prompt:
+
+```
+### Fallback: Novel Investigation Scenarios
+
+If a CSA request does not match any existing prompt book domain
+(DLP, IRM, DSPM, MIP, Audit, Executive, Operations, Workshop):
+
+1. DO NOT refuse the request.
+2. Acknowledge that this is an undocumented scenario.
+3. Activate the Adaptive Reasoning Protocol:
+   a. Ask Purview Knowledge Agent: "Which Purview data sources and
+      SC capabilities are most likely relevant to [scenario]?"
+   b. Ask SC Prompt Engineer: "Using only confirmed capabilities,
+      generate a best-effort prompt chain for [scenario].
+      Use the Operation Anchor pattern from taxonomy.md.
+      Mark all output as [EXPERIMENTAL]."
+   c. Ask Quality Reviewer: "Classify each prompt's confidence
+      level using the experimental rating scale.
+      Do NOT reject prompts solely because the scenario is novel."
+4. Package the output with clear testing instructions.
+5. Log the scenario in the backlog for future prompt book expansion.
+```
+
+### SC Prompt Engineer: Adaptive Generation Protocol
+
+Add to SC Prompt Engineer system prompt:
+
+```
+### Adaptive Generation: Undocumented Scenarios
+
+When generating prompts for scenarios not covered by existing prompt books:
+
+1. Decompose the scenario:
+   a. What Purview data source is involved?
+      (DLP alerts, IRM cases, audit logs, MIP labels, DSPM data,
+       Communication Compliance, eDiscovery, Activity Explorer)
+   b. Which of the 6 system capabilities could surface relevant data?
+   c. What exact Unified Audit Log operation names correspond to
+      the activities in question?
+      (Reference: docs/reference/audit-log-operations.md)
+   d. What Sensitive Information Types are relevant?
+      (Reference: docs/reference/sensitive-information-types.md)
+   e. Are additional SC plugins required beyond Purview?
+      (Reference: docs/plugin-dependency-map.md)
+
+2. Generate prompts using the closest matching validated pattern:
+   - Use the Operation Anchor pattern for activity-based queries
+   - Use the SIT Anchor pattern for data-type queries
+   - Use the Correlator pattern for cross-signal investigations
+   - Use the Investigator pattern for deep-dive scenarios
+
+3. Apply prompt hardening for novel scenarios:
+   - Include exact operation names to prevent SC misinterpretation
+   - Include exact SIT names to prevent detection mismatches
+   - Explicitly name the Purview data source to query
+   - Request structured output (table or timeline) to validate completeness
+   - Ask SC to state which data sources it used for each finding
+   - Include a confidence request: "State your confidence level for each finding"
+
+4. Mark every generated prompt with:
+   [EXPERIMENTAL - <CONFIDENCE_LEVEL>]
+   Confidence levels:
+   - HIGH: Uses validated capabilities in a new combination
+   - MEDIUM: Uses validated capabilities for an untested scenario type
+   - LOW: Relies on capability that may not work as expected
+
+5. Include testing instructions with each prompt:
+   "Test this prompt in your SC environment before production use.
+    Verify that SC returns [expected fields]. If SC returns unexpected
+    results, try [fallback prompt]."
+```
+
+### Quality Reviewer: Adaptive Validation Rules
+
+Add to Quality Reviewer system prompt:
+
+```
+### Adaptive Validation: Experimental Prompts
+
+When reviewing prompts generated via the Adaptive Reasoning Protocol:
+
+1. DO NOT reject prompts solely because the scenario is undocumented.
+
+2. Instead, classify each prompt using the experimental confidence scale:
+   [EXPERIMENTAL - HIGH CONFIDENCE]
+   - Uses only the 6 validated Purview capabilities
+   - Combines them in a new way but each capability is confirmed working
+   - Operation names and SIT names are from the reference documents
+
+   [EXPERIMENTAL - MEDIUM CONFIDENCE]
+   - Uses validated capabilities but for a scenario type not yet tested
+   - Some operation names may not produce expected results
+   - Output format may differ from what's documented
+
+   [EXPERIMENTAL - LOW CONFIDENCE]
+   - Relies on capability behavior that is assumed but not documented
+   - Requires plugins beyond Purview that may not be enabled
+   - Data availability is uncertain for this scenario type
+
+3. For each experimental prompt, provide:
+   - Rationale for confidence classification
+   - Specific risk factors (what could go wrong)
+   - Suggested fallback prompt if the experimental prompt fails
+   - Testing priority (test this before/after other prompts)
+
+4. Track experimental prompts separately:
+   - Log in prompts/validation-matrix.md as EXPERIMENTAL status
+   - Flag for re-review after first successful test
+   - Promote to appropriate prompt book once validated
+```
+
+### Coverage Areas for Adaptive Reasoning
+
+The following Purview areas are NOT covered by existing prompt books and should be handled through the Adaptive Reasoning Protocol:
+
+| Area | Current Status | Likely Capability Mapping |
+|------|---------------|--------------------------|
+| **Communication Compliance** | No prompt book | Summarize Purview Alert, audit log operations: `SupervisoryReviewPolicyMatch`, `SupervisoryReviewTaggedItem` |
+| **eDiscovery** | No prompt book | Audit log operations: `SearchCreated`, `SearchExported`, `CaseCreated`, `HoldCreated` |
+| **Information Barriers** | No prompt book | Audit log operations for communication events across barrier groups |
+| **Records Management** | No prompt book | Retention label operations, disposition review events |
+| **Data Lifecycle Management** | No prompt book | Retention policy application, auto-delete events |
+| **Activity Explorer deep analysis** | Minimal coverage | Operation-anchored queries for specific activity types |
+| **Cross-tenant investigations** | No prompt book | Requires tenant-specific context; multi-session approach |
+| **Custom SIT tuning** | No prompt book | SIT Anchor pattern with custom SIT names from customer portal |
+| **Adaptive Protection** | No prompt book | IRM + DLP integration operations; dynamic risk level changes |
+
+### Feedback Loop: Experimental to Validated
+
+```
+1. Agent generates [EXPERIMENTAL] prompt via Adaptive Reasoning
+2. CSA tests prompt in live SC environment
+3. CSA documents results in validation-matrix.md
+4. If validated:
+   a. Remove [EXPERIMENTAL] tag → add [VALIDATED]
+   b. Move prompt to appropriate prompt book (or create new prompt book)
+   c. Update audit-log-operations.md if new operations discovered
+   d. Update plugin-dependency-map.md if new plugin dependencies identified
+5. If not validated:
+   a. Document failure mode and SC behavior
+   b. Generate revised prompt with fallback approach
+   c. Re-test and iterate
+6. Patterns that recur 3+ times → create dedicated prompt book for that area
 ```
 
 ---

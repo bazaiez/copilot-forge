@@ -1,12 +1,32 @@
 # Information Protection and Sensitivity Labels Prompt Book
 
-Security Copilot for Purview Data Security: Sensitivity label coverage, misconfiguration, and auto-labeling effectiveness.
+**Validation Status:** 4 [VALIDATED] / 3 [PARTIALLY-VALIDATED] / 3 [ASPIRATIONAL]
+**Required Plugin:** Microsoft Purview
+**Last Validated:** April 2026
+
+Copilot Forge — Purview Data Security: Sensitivity label coverage, misconfiguration, and auto-labeling effectiveness.
 
 **Note:** SC accesses label data and misclassification patterns through Purview's data risk summaries and DLP integrations. These prompts help evaluate label strategy, not configure labels directly (that's in the portal).
 
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names (see Section 6: MIP/Sensitivity Label Operations)
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names for misclassification analysis
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+- [Error Recovery](../taxonomy.md#error-recovery-and-troubleshooting) — Recovery for unexpected results
+
+**MIP Operation Names for Prompt Anchoring:**
+When building audit-based prompts, use these exact operation names to ensure SC queries the correct events:
+- Label applied: `SensitivityLabelApplied`, `SensitivityLabelUpdated`, `FileSensitivityLabelChanged`
+- Label removed: `SensitivityLabelRemoved`, `SensitivityLabeledFileRemoved`
+- Auto-labeling: `AutoSensitivityLabelRuleMatch`, `SensitivityLabelPolicyMatched`
+- File activity: `SensitivityLabeledFileOpened`, `SensitivityLabeledFileRenamed`
+- Exchange: `MIPLabel`
+- Use `ActionSource` field to distinguish: 1=Default, 2=Auto, 3=Manual, 4=Recommended
+
 ---
 
-## 1. Assess Sensitivity Label Coverage Across the Organization
+## 1. Assess Sensitivity Label Coverage Across the Organization [VALIDATED]
 
 **Title:** Label Adoption and Coverage Analysis
 
@@ -72,7 +92,7 @@ Provide a scorecard suitable for governance committee review.
 
 ---
 
-## 2. Identify Mislabeled or High-Risk Content
+## 2. Identify Mislabeled or High-Risk Content [PARTIALLY-VALIDATED]
 
 **Title:** Label Accuracy and Misclassification Detection
 
@@ -137,7 +157,7 @@ Identify mislabeled or incorrectly classified content from the past 180 days:
 
 ---
 
-## 3. Evaluate Auto-Labeling Rule Effectiveness
+## 3. Evaluate Auto-Labeling Rule Effectiveness [PARTIALLY-VALIDATED]
 
 **Title:** Auto-Labeling Performance Assessment
 
@@ -152,6 +172,10 @@ Identify mislabeled or incorrectly classified content from the past 180 days:
 **Exact Prompt:**
 ```
 Evaluate auto-labeling effectiveness for the past 60 days:
+
+Look specifically for these operations: AutoSensitivityLabelRuleMatch,
+SensitivityLabelPolicyMatched, SensitivityLabelApplied (where ActionSource=2
+for auto-applied labels).
 
 For each active auto-label rule:
 
@@ -207,7 +231,7 @@ Prioritize rules by coverage and impact.
 
 ---
 
-## 4. Analyze Label Compliance in Regulated Data Areas
+## 4. Analyze Label Compliance in Regulated Data Areas [ASPIRATIONAL]
 
 **Title:** Regulatory Label Validation
 
@@ -278,7 +302,7 @@ Provide findings suitable for regulatory audit or assessor review.
 
 ---
 
-## 5. Identify Over-Labeling or Label Confusion
+## 5. Identify Over-Labeling or Label Confusion [PARTIALLY-VALIDATED]
 
 **Title:** Label Taxonomy Simplification
 
@@ -365,6 +389,11 @@ Provide before/after taxonomy comparison.
 **Exact Prompt:**
 ```
 Analyze access patterns for sensitive labeled content:
+
+Look specifically for these operations: SensitivityLabeledFileOpened,
+FileAccessed, FileDownloaded, FileSyncDownloadedFull.
+Cross-reference with label operations: SensitivityLabelRemoved,
+SensitivityLabeledFileRemoved (potential downgrade attempts).
 
 1. Access inventory:
    - For each high-sensitivity label (Confidential, Highly Confidential),

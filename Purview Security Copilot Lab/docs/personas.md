@@ -1,4 +1,4 @@
-# User Personas: Security Copilot for Purview Data Security
+# User Personas: Copilot Forge — Purview Data Security
 
 ## Persona 1: CSA / Security Consultant
 

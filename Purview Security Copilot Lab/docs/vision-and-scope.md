@@ -1,4 +1,4 @@
-# Vision and Scope: Security Copilot for Purview Data Security
+# Vision and Scope: Copilot Forge — Purview Data Security
 
 ## Vision Statement
 

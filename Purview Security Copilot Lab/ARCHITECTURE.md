@@ -1,9 +1,12 @@
-# Architecture: Security Copilot for Purview Data Security Framework
+# Architecture: Copilot Forge — Purview Data Security
 
 **Document Version:** 1.1
 **Last Updated:** April 2026
+**Author:** Bilel Azaiez — Microsoft CSA, with AI-assisted development
 **Status:** Production Ready
 **Audience:** CSAs, Security Architects, Product Teams, Field Engineers
+
+> **See also:** The 6-agent system that implements this architecture is documented in [agents/AGENT-HUB.md](agents/AGENT-HUB.md). This document covers the **framework architecture** (how SC + Purview work together). The agent-level architecture is in [agents/architecture.md](agents/architecture.md).
 
 ---
 
@@ -393,4 +396,3 @@ Each assumption is tagged with validation status:
 
 **Status:** Production Ready
 **Last Validated:** April 2026
-**Feedback?** Contact the Security Copilot Champions community or your CSA.

@@ -1,12 +1,20 @@
 # Executive Reporting Prompt Book
 
-Security Copilot for Purview Data Security: Leadership summaries, board reports, and incident briefs.
+**Validation Status:** 7 [VALIDATED] / 1 [ASPIRATIONAL]
+**Required Plugin:** Microsoft Purview
+**Last Validated:** April 2026
+
+Copilot Forge — Purview Data Security: Leadership summaries, board reports, and incident briefs.
 
 **Note:** These prompts focus on SC's ability to synthesize and translate technical findings into executive language. SC consumes raw Purview data and outputs leadership-ready narratives, risk assessments, and recommendations.
 
+**Reference Documents:**
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+
 ---
 
-## 1. Monthly Data Security Risk Summary for Leadership
+## 1. Monthly Data Security Risk Summary for Leadership [VALIDATED]
 
 **Title:** Executive Risk Dashboard Brief
 
@@ -87,7 +95,7 @@ Include visual aids: trend chart, risk heat map, KPI scorecard.
 
 ---
 
-## 2. Incident Impact Brief for Leadership
+## 2. Incident Impact Brief for Leadership [VALIDATED]
 
 **Title:** Breach or Incident Executive Summary
 
@@ -177,7 +185,7 @@ Tone: Transparent, factual, action-oriented. Acknowledge severity while demonstr
 
 ---
 
-## 3. Data Compliance Audit Readiness Report
+## 3. Data Compliance Audit Readiness Report [VALIDATED]
 
 **Title:** Compliance Certification and Audit Preparation
 

@@ -1,5 +1,9 @@
 # DLP Prompt Book: Security Copilot for Purview Data Loss Prevention
 
+**Validation Status:** 14 [VALIDATED] / 2 [PARTIALLY-VALIDATED]
+**Required Plugin:** Microsoft Purview (primary); Microsoft Entra (optional, for cross-signal investigation)
+**Last Validated:** April 2026
+
 This prompt book contains 16 ready-to-use Security Copilot prompts for Purview Data Loss Prevention workflows. Each prompt is validated against real Security Copilot capabilities with the Purview plugin enabled. Prompts are organized by investigation stage, from initial triage through reporting and policy optimization.
 
 **Key Capabilities Used:**
@@ -7,13 +11,30 @@ This prompt book contains 16 ready-to-use Security Copilot prompts for Purview D
 - Summarize Purview Alert
 - Triage Purview Alerts
 
+**Reference Documents:**
+- [Audit Log Operations Reference](../../docs/reference/audit-log-operations.md) — Exact operation names for activity-based prompts (see Section 4: DLP, Section 5: Endpoint DLP)
+- [Sensitive Information Types Reference](../../docs/reference/sensitive-information-types.md) — Exact SIT names for detection queries
+- [Plugin Dependency Map](../../docs/plugin-dependency-map.md) — Required plugins per section
+- [Validation Matrix](../validation-matrix.md) — Testing status for each prompt
+- [Error Recovery](../taxonomy.md#error-recovery-and-troubleshooting) — What to do when SC returns unexpected results
+
+**DLP Schema Fields for Detailed Prompting:**
+When investigating DLP events, request these specific audit log fields for richer context:
+- `PolicyName` / `RuleName` — Identify which DLP policy and rule matched
+- `IncidentId` — Correlate related DLP events across workloads
+- `Actions` — What enforcement action was taken (BlockAccess, NotifyUser, Encrypt, ExSetHeader)
+- `Severity` — Low / Medium / High
+- `Reason` (in ExceptionInfo) — Why DLP action was undone: Override, DocumentChange, or PolicyChange
+- `Justification` — User-provided text when overriding DLP policy
+- See [Appendix B: MIP/DLP Schema Key Fields](../../docs/reference/audit-log-operations.md#appendix-b-mipdlp-schema-key-fields) for complete reference
+
 ---
 
 ## 1. TRIAGE
 
 Quick alert assessment and severity prioritization for incoming DLP violations.
 
-### 1.1 Single DLP Alert Severity Classification
+### 1.1 Single DLP Alert Severity Classification [VALIDATED]
 
 **Title:** Assess DLP Alert Severity and Triage Priority
 
@@ -22,6 +43,7 @@ Quick alert assessment and severity prioritization for incoming DLP violations.
 **When to Use:** Immediately after a DLP alert arrives in Purview; helps incident responders prioritize workload.
 
 **SC System Capability Used:** Triage Purview Alerts
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPRuleUndo`, `DLPInfo`
 
 **Exact Prompt:**
 ```
@@ -51,7 +73,7 @@ Show me the top five high severity DLP alerts.
 
 ---
 
-### 1.2 Batch Triage and Priority Ranking
+### 1.2 Batch Triage and Priority Ranking [VALIDATED]
 
 **Title:** Triage Multiple DLP Alerts by Risk Priority
 
@@ -60,6 +82,7 @@ Show me the top five high severity DLP alerts.
 **When to Use:** Weekly or daily batch review of accumulated DLP alerts; typical Monday morning or end-of-day queue review.
 
 **SC System Capability Used:** Triage Purview Alerts
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPInfo`
 
 **Exact Prompt:**
 ```
@@ -88,7 +111,7 @@ Triage the most recent Purview alerts and show me which DLP policy violations I 
 
 ---
 
-### 1.3 Is This a Legitimate Business Exception?
+### 1.3 Is This a Legitimate Business Exception? [VALIDATED]
 
 **Title:** Evaluate Alert as False Positive vs. Legitimate Business Use
 
@@ -97,6 +120,7 @@ Triage the most recent Purview alerts and show me which DLP policy violations I 
 **When to Use:** When an alert from a trusted user or expected business scenario arrives; prevents alert fatigue.
 
 **SC System Capability Used:** Triage Purview Alerts
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPRuleUndo`
 
 **Exact Prompt:**
 ```
@@ -125,7 +149,7 @@ Summarize the DLP alert with ID <alertId>. Based on the user's role (Finance Man
 
 ---
 
-### 1.4 Filter Alerts by Policy and Pattern
+### 1.4 Filter Alerts by Policy and Pattern [PARTIALLY-VALIDATED]
 
 **Title:** Identify All Alerts from Specific Policy or User Pattern
 
@@ -134,6 +158,8 @@ Summarize the DLP alert with ID <alertId>. Based on the user's role (Finance Man
 **When to Use:** When you notice repeated alerts from same policy or user; helps identify whether it's systemic or user-specific training need.
 
 **SC System Capability Used:** Get Data Risk Summary / Triage Purview Alerts
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPInfo`
+**Note:** Filtering by specific policy name may not work consistently across all tenants. If SC does not filter correctly, try including the exact policy name in quotes.
 
 **Exact Prompt:**
 ```
@@ -166,7 +192,7 @@ Show me the top 5 DLP alerts that I should prioritize today. Filter for alerts r
 
 Deep dives into policy violations, user activity patterns, and data flow analysis.
 
-### 2.1 DLP Alert Summary and Context
+### 2.1 DLP Alert Summary and Context [VALIDATED]
 
 **Title:** Detailed Analysis of Specific DLP Alert
 
@@ -175,6 +201,8 @@ Deep dives into policy violations, user activity patterns, and data flow analysi
 **When to Use:** During investigation of an alert triaged as requiring action; needed before escalation or remediation.
 
 **SC System Capability Used:** Summarize Purview Alert
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPInfo`
+**Relevant SIT Names:** Use exact names from [SIT Reference](../../docs/reference/sensitive-information-types.md)
 
 **Exact Prompt:**
 ```
@@ -205,7 +233,7 @@ Can you summarize purview alert '<alertId>'? Include the data types detected, co
 
 ---
 
-### 2.2 User Risk Profile and Historical Pattern Analysis
+### 2.2 User Risk Profile and Historical Pattern Analysis [VALIDATED]
 
 **Title:** Assess User's Historical DLP Behavior and Risk Level
 
@@ -214,6 +242,7 @@ Can you summarize purview alert '<alertId>'? Include the data types detected, co
 **When to Use:** After identifying a DLP alert; establishes whether user behavior is anomalous or consistent with their role.
 
 **SC System Capability Used:** Get User Risk Summary
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPRuleUndo`, `FileDownloaded`, `SharingSet`
 
 **Exact Prompt:**
 ```
@@ -244,7 +273,7 @@ What's the risk profile of the user associated with DLP alert <alertId>? Show me
 
 ---
 
-### 2.3 Data Exfiltration Activity Correlation
+### 2.3 Data Exfiltration Activity Correlation [VALIDATED]
 
 **Title:** Trace All User Exfiltration Activities and Data Movements
 
@@ -253,6 +282,8 @@ What's the risk profile of the user associated with DLP alert <alertId>? Show me
 **When to Use:** During investigation of potential insider threat or significant DLP violation; requires linking multiple data points.
 
 **SC System Capability Used:** Get Data Risk Summary / Get User Risk Summary
+**Relevant Audit Log Operations:** `FileDownloaded`, `FileSyncDownloadedFull`, `FileCreatedOnRemovableMedia`, `FileCopiedToRemovableMedia`, `FileUploadedToCloud`, `SharingSet`, `AnonymousLinkCreated`, `Send`, `SendAs`
+**Note:** Use exact operation names when SC returns incomplete exfiltration data. See [Operation Anchor pattern](../taxonomy.md#pattern-9-the-operation-anchor).
 
 **Exact Prompt:**
 ```
@@ -282,7 +313,7 @@ List all the data exfiltration activities involving user <user> in the past 30 d
 
 ---
 
-### 2.4 Sequential Activity Timeline
+### 2.4 Sequential Activity Timeline [VALIDATED]
 
 **Title:** Reconstruct User Activity Timeline During Incident Period
 
@@ -291,6 +322,8 @@ List all the data exfiltration activities involving user <user> in the past 30 d
 **When to Use:** During serious incident investigation; helps establish whether activity was accidental or deliberate pattern.
 
 **SC System Capability Used:** Get User Risk Summary
+**Relevant Audit Log Operations:** `FileAccessed`, `FileDownloaded`, `FileModified`, `FileMoved`, `FileDeleted`, `SharingSet`, `Send`, `New-InboxRule`
+**Note:** SC reports what IRM surfaces. For complete timeline, specify exact operations using the [Operation Anchor pattern](../taxonomy.md#pattern-9-the-operation-anchor).
 
 **Exact Prompt:**
 ```
@@ -320,7 +353,7 @@ List all the sequential activities involving user <user> over the past 30 days. 
 
 ---
 
-### 2.5 Policy Match Analysis and Confidence Assessment
+### 2.5 Policy Match Analysis and Confidence Assessment [VALIDATED]
 
 **Title:** Validate SIT Matches and Assess True Positive Probability
 
@@ -361,7 +394,7 @@ Analyze the SIT matches in Purview alert '<alertId>'. Are these legitimate sensi
 
 Combined DLP and Insider Risk Management analysis for complex cases.
 
-### 3.1 DLP Alert + Insider Risk Context
+### 3.1 DLP Alert + Insider Risk Context [VALIDATED]
 
 **Title:** Correlate DLP Alert with User Risk Profile from Insider Risk Management
 
@@ -370,6 +403,8 @@ Combined DLP and Insider Risk Management analysis for complex cases.
 **When to Use:** High-severity DLP alert from user with any insider risk indicators; requires joint analysis of both signals.
 
 **SC System Capability Used:** Get User Risk Summary + Summarize Purview Alert
+**Relevant Audit Log Operations:** `DlpRuleMatch`, `InsiderRiskSequenceDetected`, `InsiderRiskAlertGenerated`
+**Prerequisite:** IRM data sharing must be enabled between Purview DLP and IRM.
 
 **Exact Prompt:**
 ```
@@ -399,7 +434,7 @@ A user triggered a DLP alert by attempting to share confidential financial data 
 
 ---
 
-### 3.2 Data Movement Across Channels
+### 3.2 Data Movement Across Channels [PARTIALLY-VALIDATED]
 
 **Title:** Track Sensitive Data Movement Across Organization
 
@@ -408,6 +443,8 @@ A user triggered a DLP alert by attempting to share confidential financial data 
 **When to Use:** After significant DLP incident; helps understand which channels are most vulnerable and where controls are gaps.
 
 **SC System Capability Used:** Get Data Risk Summary
+**Relevant Audit Log Operations:** `Send`, `FileDownloaded`, `SharingSet`, `AnonymousLinkCreated`, `FileUploadedToCloud`, `MessageCreatedHasLink`
+**Note:** Channel-level detail may vary by tenant configuration and audit log coverage.
 
 **Exact Prompt:**
 ```
@@ -441,7 +478,7 @@ Track sensitive data movement across the organization using Microsoft Purview to
 
 Reducing alert fatigue and improving detection accuracy.
 
-### 4.1 Policy Effectiveness and False Positive Analysis
+### 4.1 Policy Effectiveness and False Positive Analysis [VALIDATED]
 
 **Title:** Assess DLP Policy for False Positive Rate and Effectiveness
 
@@ -450,6 +487,7 @@ Reducing alert fatigue and improving detection accuracy.
 **When to Use:** When specific policy generates many low-severity alerts; periodic policy health review.
 
 **SC System Capability Used:** Triage Purview Alerts / Get Data Risk Summary
+**Relevant Audit Log Operations:** `DLPRuleMatch`, `DLPRuleUndo`, `DLPInfo`
 
 **Exact Prompt:**
 ```
@@ -479,7 +517,7 @@ Show me the top 5 DLP alerts that I should prioritize today. Filter for the Fina
 
 ---
 
-### 4.2 False Positive Reduction Through Policy Refinement
+### 4.2 False Positive Reduction Through Policy Refinement [PARTIALLY-VALIDATED]
 
 **Title:** Recommend Policy Configuration Changes to Improve Accuracy
 
@@ -521,7 +559,7 @@ Based on our DLP alerts in the past 30 days, recommend specific configuration ch
 
 Summarizing findings for leadership and compliance.
 
-### 5.1 Incident Summary for Leadership
+### 5.1 Incident Summary for Leadership [VALIDATED]
 
 **Title:** Executive Summary of DLP Incident for Leadership Review
 
