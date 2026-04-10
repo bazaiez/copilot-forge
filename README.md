@@ -62,26 +62,29 @@ Go to **[agents/AGENT-HUB.md](agents/AGENT-HUB.md)** and describe what you need.
 
 ## 🤖 The 6-Agent System
 
-```
-          ┌─────────────────────────────────────────┐
-          │           🎛️  ORCHESTRATOR               │
-          │     Routes, plans, coordinates, synth    │
-          └──────────┬──────────┬──────────┬─────────┘
-                     │          │          │
-        ┌────────────┤    ┌─────┴─────┐    ├────────────┐
-        ▼            ▼    ▼           ▼    ▼            ▼
-  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
-  │ 🧪 Know  │ │ ⚡ Gen   │ │ 🔍 Inv   │ │ 🎬 Demo  │ │ ✅ QA    │
-  │ ledge    │ │ erator   │ │ estiga-  │ │ Archi-   │ │ Review-  │
-  │ Agent    │ │ Agent    │ │ tion     │ │ tect     │ │ er       │
-  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘
-       │            │            │            │            │
-       └────────────┴────────────┴────────────┴────────────┘
-                              │
-                     ┌────────┴────────┐
-                     │  📦 Output      │
-                     │  Customer-Ready │
-                     └─────────────────┘
+```mermaid
+graph TD
+    U["👤 You"] --> O
+    O["🎛️ Orchestrator<br><i>Routes, plans, coordinates</i>"]
+    O --> K["🧪 Knowledge<br><i>SC + Purview Q&A</i>"]
+    O --> P["⚡ Prompt Generator<br><i>Crafts prompts from scratch</i>"]
+    O --> I["🔍 Investigation<br><i>Incident playbooks</i>"]
+    O --> D["🎬 Demo Architect<br><i>Customer demos & workshops</i>"]
+    O --> Q["✅ Quality Reviewer<br><i>Validates all outputs</i>"]
+    K --> OUT["📦 Customer-Ready Output"]
+    P --> OUT
+    I --> OUT
+    D --> OUT
+    Q --> OUT
+
+    style O fill:#4a90d9,stroke:#333,color:#fff
+    style K fill:#2ecc71,stroke:#333,color:#fff
+    style P fill:#f39c12,stroke:#333,color:#fff
+    style I fill:#e74c3c,stroke:#333,color:#fff
+    style D fill:#9b59b6,stroke:#333,color:#fff
+    style Q fill:#1abc9c,stroke:#333,color:#fff
+    style OUT fill:#34495e,stroke:#333,color:#fff
+    style U fill:#95a5a6,stroke:#333,color:#fff
 ```
 
 | Agent | What It Does | File |

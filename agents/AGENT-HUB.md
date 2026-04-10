@@ -40,37 +40,29 @@ You describe what you need in plain language. The Orchestrator Agent analyzes yo
 
 ## 🤖 The Agent Team
 
-```
-                    ┌─────────────────────┐
-                    │   👤 You (user)     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │  🎛️ Orchestrator    │ ← Receives ALL requests
-                    │    (The Brain)      │   Plans, delegates, synthesizes
-                    └──────────┬──────────┘
-                               │
-          ┌────────────────────┼────────────────────┐
-          │                    │                     │
-          ▼                    ▼                     ▼
- ┌─────────────────┐ ┌─────────────────┐ ┌───────────────────┐
- │ 🧪 Knowledge    │ │ ⚡ Prompt Gen   │ │ 🔍 Investigation  │
- │                 │ │                 │ │                   │
- │ Answers SC +    │ │ Crafts prompts  │ │ Builds incident   │
- │ Purview         │ │ from scratch    │ │ response          │
- │ questions       │ │ for any case    │ │ playbooks         │
- └─────────────────┘ └─────────────────┘ └───────────────────┘
-          │                    │                     │
-          ▼                    ▼                     ▼
- ┌─────────────────┐ ┌─────────────────┐
- │ 🎬 Demo         │ │ ✅ Quality      │
- │ Architect       │ │ Reviewer        │
- │                 │ │                 │
- │ Designs demos,  │ │ Validates ALL   │
- │ workshops,      │ │ outputs before  │
- │ materials       │ │ delivery        │
- └─────────────────┘ └─────────────────┘
+```mermaid
+graph TD
+    U["👤 You"] --> O
+    O["🎛️ Orchestrator<br><i>The Brain — routes, plans, synthesizes</i>"]
+    O --> K["🧪 Knowledge<br><i>Answers SC + Purview questions</i>"]
+    O --> P["⚡ Prompt Generator<br><i>Crafts prompts from scratch</i>"]
+    O --> I["🔍 Investigation<br><i>Builds incident playbooks</i>"]
+    O --> D["🎬 Demo Architect<br><i>Designs demos & workshops</i>"]
+    O --> Q["✅ Quality Reviewer<br><i>Validates all outputs</i>"]
+    K --> OUT["📦 Customer-Ready Output"]
+    P --> OUT
+    I --> OUT
+    D --> OUT
+    Q --> OUT
+
+    style O fill:#4a90d9,stroke:#333,color:#fff
+    style K fill:#2ecc71,stroke:#333,color:#fff
+    style P fill:#f39c12,stroke:#333,color:#fff
+    style I fill:#e74c3c,stroke:#333,color:#fff
+    style D fill:#9b59b6,stroke:#333,color:#fff
+    style Q fill:#1abc9c,stroke:#333,color:#fff
+    style OUT fill:#34495e,stroke:#333,color:#fff
+    style U fill:#95a5a6,stroke:#333,color:#fff
 ```
 
 ---
