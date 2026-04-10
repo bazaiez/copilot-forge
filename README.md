@@ -2,12 +2,7 @@
 
 > **AI-powered prompt engineering & investigation framework for Microsoft Security Copilot + Purview**
 
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
-[![Agents](https://img.shields.io/badge/Agents-6%20Specialists-blue)]()
-[![Prompts](https://img.shields.io/badge/Prompt%20Books-9%20Domains-orange)]()
-[![Phase](https://img.shields.io/badge/Phase-5%20of%206-yellow)]()
-
-A field-ready framework for Data Security CSAs, analysts, and administrators to generate and operationalize Security Copilot prompts, agents, and promptbooks for Purview data security investigations.
+A field-ready **6-agent system** with **9 prompt books** for Data Security CSAs, analysts, and administrators to generate and operationalize Security Copilot prompts, agents, and promptbooks for Purview data security investigations.
 
 ---
 
